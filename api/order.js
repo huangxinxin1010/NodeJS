@@ -45,7 +45,51 @@ const list = async (ctx) => {
 		}
 	}
 }
+// 订单列表
+const list1 = async (ctx) => {
+	try {
+		const { page, pageSize} = ctx.request.body
 
+		const user = ctx.user
+
+		let where = {}
+		if (user.role == 2 ) {
+			where = {
+				userId: user.id,
+				status:1
+			}
+		}
+		const { count: total, rows: dataList1 } = await Order.findAndCount({
+			where,
+			include: [{
+				model: Goods,
+				include: [{
+					model: Category,
+					attributes: ['id', 'name'],
+				}, {
+					model: Rank,
+					attributes: ['id', 'name'],
+				}]
+			},
+				Address
+			],
+			offset: page * pageSize || 0,
+			limit: pageSize || 50
+		});
+
+		ctx.body = {
+			code: 0,
+			total,
+			dataList1
+		}
+	} catch (err) {
+		console.log(err)
+		ctx.body = {
+			code: 1,
+			err
+		}
+	}
+}
 // 历史购买记录
 const list2 = async (ctx) => {
 	try {
@@ -91,7 +135,49 @@ const list2 = async (ctx) => {
 		}
 	}
 }
+// 管理员订单（待支付、已支付、未支付）
+const list3 = async (ctx) => {
+	try {
+		const { page, pageSize} = ctx.request.body
+		const user = ctx.user
 
+		let where = {}
+		if (user.role == 1 ) {
+			where = {
+				status:[1,2,3]
+			}
+		}
+		const { count: total, rows: dataList3 } = await Order.findAndCount({
+			where,
+			include: [{
+				model: Goods,
+				include: [{
+					model: Category,
+					attributes: ['id', 'name'],
+				}, {
+					model: Rank,
+					attributes: ['id', 'name'],
+				}]
+			},
+				Address
+			],
+			offset: page * pageSize || 0,
+			limit: pageSize || 50
+		});
+
+		ctx.body = {
+			code: 0,
+			total,
+			dataList3
+		}
+	} catch (err) {
+		console.log(err)
+		ctx.body = {
+			code: 1,
+			err
+		}
+	}
+}
 // 订单详情
 const detail = async (ctx) => {
 	try {
@@ -287,10 +373,12 @@ const edit= async (ctx) => {
 
 module.exports = {
 	list,
+	list1,
+	list2,
+	list3,
 	create,
 	del,
 	detail,
 	status,
-	list2,
 	edit
 }

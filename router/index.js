@@ -49,7 +49,9 @@ const post = [
 	['/rank/delete', rank.del],
 
 	['/order', order.list],
+	['/order1', order.list1],
 	['/order2', order.list2],
+	['/order3', order.list3],
 	['/order/create', order.create],
 	['/order/delete', order.del],
 	['/order/detail', order.detail],
