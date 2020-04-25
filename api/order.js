@@ -1,4 +1,6 @@
-const { Order, Goods, Category, Rank, Address } = require('../db');
+
+
+const { Order, Goods, Category, Rank, Address ,User} = require('../db');
 
 // 购物车列表
 const list = async (ctx) => {
@@ -147,7 +149,7 @@ const list3 = async (ctx) => {
 				status:[1,2,3]
 			}
 		}
-		const { count: total, rows: dataList3 } = await Order.findAndCount({
+		const { count: total, rows: dataList3 } = await Order.findAndCountAll({
 			where,
 			include: [{
 				model: Goods,
@@ -157,8 +159,13 @@ const list3 = async (ctx) => {
 				}, {
 					model: Rank,
 					attributes: ['id', 'name'],
-				}]
+				}
+				]
 			},
+				{
+					model:User,
+					attributes: ['id', 'username'],
+				},
 				Address
 			],
 			offset: page * pageSize || 0,
@@ -268,6 +275,59 @@ const create = async (ctx) => {
 }
 
 
+// 创建订单
+const create1 = async (ctx) => {
+	try {
+
+		const {
+			goodsId,
+			addressId,
+			orderId,
+		} = ctx.request.body
+
+		const ads = await Address.findOne({
+			where: {
+				id: addressId
+			}
+		})
+		if (!ads) {
+			throw '地址不存在'
+		}
+		const good = await Goods.findOne({
+			where: {
+				id: goodsId
+			}
+		})
+		const order = await Order.findOne({
+			where: {
+				id:orderId
+			}
+		})
+		const user = ctx.user
+		await Order.create({
+			name: ads.name,
+			goodId: goodsId,
+			addressId,
+			userId: user.id,
+			status: 1,
+			quantity:1,
+			totalPrice:good.price,
+
+		})
+		console.log(status)
+
+		ctx.body = {
+			code: 0
+		}
+	} catch (err) {
+		console.log(err)
+		ctx.body = {
+			code: 1,
+			err
+		}
+	}
+}
+
 // 删除订单
 const del = async (ctx) => {
 	try {
@@ -349,12 +409,15 @@ const edit= async (ctx) => {
 				id
 			}
 		})
-		if (!order) {
+		if ((!order)) {
 			throw '数据不存在'
 		}
 		if(order.userId != ctx.user.id && ctx.user.role == 2){
 			throw '只能修改自己的订单'
 		}
+		// if (quantity<=0) {
+		// 	throw '亲，数量必须大于1的整数哦~'
+		// }
 		await order.update({
 			quantity,
 			totalPrice
@@ -362,6 +425,7 @@ const edit= async (ctx) => {
 		ctx.body = {
 			code: 0
 		}
+
 	} catch (err) {
 		console.log(err)
 		ctx.body = {
@@ -377,6 +441,7 @@ module.exports = {
 	list2,
 	list3,
 	create,
+	create1,
 	del,
 	detail,
 	status,

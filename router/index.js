@@ -53,6 +53,7 @@ const post = [
 	['/order2', order.list2],
 	['/order3', order.list3],
 	['/order/create', order.create],
+	['/order/create1', order.create1],
 	['/order/delete', order.del],
 	['/order/detail', order.detail],
 	['/order/status', order.status],
