@@ -183,7 +183,7 @@ const Order = sequelize.define('order', {
 
 /**
  * 图书类型分类
- * name 岗位类别名称
+ * name 类别名称
  */
 
 const Category = sequelize.define('category', {
@@ -204,7 +204,7 @@ const Category = sequelize.define('category', {
 
 /**
 * 排行榜分类
-* name 岗位类别名称
+* name 排行榜名称
 */
 const Rank = sequelize.define('rank', {
   id: {
@@ -258,14 +258,32 @@ const Address = sequelize.define('address', {
     freezeTableName: true
   });
 
+
+const Record = sequelize.define('record', {
+  id: {
+    type: Sequelize.UUID,
+    primaryKey: true,
+    defaultValue: () => {
+      return genUuid()
+    }
+  },keyword: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  }
+}, {
+  freezeTableName: true
+});
 // 关系
 User.hasMany(Address);
+// User.hasMany(Record);
 Goods.belongsTo(Category);
 Goods.belongsTo(Rank);
 
 Order.belongsTo(Goods);
 Order.belongsTo(User);
 Order.belongsTo(Address);
+
+Record.belongsTo(User);
 
 
 // User.sync({ force: true })
@@ -283,5 +301,6 @@ module.exports = {
   Category,
   Rank,
   Order,
+  Record,
 }
 

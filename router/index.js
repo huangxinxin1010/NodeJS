@@ -1,20 +1,16 @@
 // 加载路由模块
-const Router = require('koa-router')();
 // 分类引入请求
-const {
+// 每个功能的请求
+const Router = require('koa-router')(), {
 	user,
 	goods,
 	address,
 	category,
 	order,
-	rank
-} = require('../api');
+	rank,
+	record,
 
-const types = ['get', 'post']
-const get = [
-]
-// 每个功能的请求
-const post = [
+} = require('../api'), types = ['get', 'post'], get = [], post = [
 	['/login', user.login],
 	['/register', user.register],
 	['/find', user.find],
@@ -30,7 +26,7 @@ const post = [
 	['/goods/edit', goods.edit],
 	['/goods/delete', goods.del],
 	['/goods/detail', goods.detail],
-	['/goods/search',goods.searchList],
+	['/goods/search', goods.searchList],
 
 	['/address', address.list],
 	['/address/create', address.create],
@@ -59,13 +55,14 @@ const post = [
 	['/order/status', order.status],
 	['/order/edit', order.edit],
 
+	['/record/create', record.create],
 
-]
 
-const router = {
+], router = {
 	get,
 	post
-}
+};
+
 
 types.forEach(type => {
 	router[type].forEach(route => {
