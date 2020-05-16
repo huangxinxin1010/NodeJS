@@ -56,6 +56,7 @@ const Router = require('koa-router')(), {
 	['/order/edit', order.edit],
 
 	['/record/create', record.create],
+	['/record/detail', record.detail],
 
 
 ], router = {

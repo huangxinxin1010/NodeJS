@@ -21,7 +21,32 @@ const create = async (ctx) => {
         }
     }
 }
+//推荐图书-查询关键字
+const detail = async (ctx) => {
+    try {
+        const {id: userId,keyword} = ctx.user
+        const where={
+            userId
+        }
+
+        const data = await Record.findOne({
+          where,
+        });
+        ctx.body = {
+            code: 0,
+            data
+        }
+    } catch (err) {
+        console.log(err)
+        ctx.body = {
+            code: 1,
+            err
+        }
+    }
+}
+
 module.exports = {
     create,
+    detail,
 
 }

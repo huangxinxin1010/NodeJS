@@ -53,11 +53,11 @@ const searchList = async (ctx) => {
 // 图书列表
 const list = async (ctx) => {
 	try {
-		const { page, pageSize, categoryId, rankId } = ctx.request.body
+		const { page, pageSize, categoryId, rankId, } = ctx.request.body
 
 		const where = {
 			categoryId,
-			rankId
+			rankId,
 		}
 		if(!categoryId) delete where.categoryId
 		if(!rankId) delete where.rankId
@@ -79,12 +79,11 @@ const list = async (ctx) => {
 // 商品详情
 const detail = async (ctx) => {
 	try {
-		const { id } = ctx.request.body
-
+		const { id} = ctx.request.body
 		const data = await Goods.findOne({
 			where: {
 				id
-			}
+			},
 		});
 
 		ctx.body = {
@@ -95,6 +94,7 @@ const detail = async (ctx) => {
 		resErr(ctx, err)
 	}
 }
+
 
 // 添加商品
 const create = async (ctx) => {
