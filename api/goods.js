@@ -38,7 +38,15 @@ const searchList = async (ctx) => {
 					}
 				}
 			]
-		}
+		},
+			include: [{
+				model: Category,
+				attributes: ['id', 'name'],
+			}, {
+				model: Rank,
+				attributes: ['id', 'name'],
+			}
+			]
 	})
 		console.log(searchList)
 		ctx.body={
@@ -63,7 +71,14 @@ const list = async (ctx) => {
 		if(!rankId) delete where.rankId
 		const { count: total, rows: dataList } = await Goods.findAndCount({
 			where,
-			include: [Category, Rank],
+			include: [{
+				model: Category,
+				attributes: ['id', 'name'],
+			}, {
+				model: Rank,
+				attributes: ['id', 'name'],
+			}
+			],
 			offset: page * pageSize || 0,
 			limit: pageSize || 50
 		});
@@ -84,6 +99,14 @@ const detail = async (ctx) => {
 			where: {
 				id
 			},
+			include: [{
+				model: Category,
+				attributes: ['id', 'name'],
+			}, {
+				model: Rank,
+				attributes: ['id', 'name'],
+			}
+			]
 		});
 
 		ctx.body = {
