@@ -102,7 +102,7 @@ const list2 = async (ctx) => {
 		if (user.role == 2 ) {
 			where = {
 				userId: user.id,
-				status:[2,3]
+				status:[2,3,4,5]
 			}
 		}
 		const { count: total, rows: dataList2 } = await Order.findAndCount({
@@ -136,7 +136,7 @@ const list2 = async (ctx) => {
 		}
 	}
 }
-// 管理员订单（待支付、已支付、未支付）
+// 管理员订单（待支付、未支付、支付宝支付、微信支付、银行卡支付）
 const list3 = async (ctx) => {
 	try {
 		const { page, pageSize} = ctx.request.body
@@ -145,7 +145,7 @@ const list3 = async (ctx) => {
 		let where = {}
 		if (user.role == 1 ) {
 			where = {
-				status:[1,2,3]
+				status:[1,2,3,4,5]
 			}
 		}
 		const { count: total, rows: dataList3 } = await Order.findAndCountAll({

@@ -151,7 +151,7 @@ const Goods = sequelize.define('goods', {
 
 /**
  * 订单
- * status 状态 0购物车 1未支付 2已支付 3取消订单
+ * status 状态 0购物车 1未支付 2取消订单 3支付宝支付 4微信支付 5银行卡支付
  */
 
 const Order = sequelize.define('order', {
